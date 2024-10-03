@@ -11,7 +11,7 @@ services:
         restart: unless-stopped
         working_dir: /var/www/
         volumes:
-            - ./laravel:/var/www
+            - ./auto-api:/var/www
         networks:
             - laravel
 
@@ -23,7 +23,7 @@ services:
             - '3000:3000'
         working_dir: /var/www
         volumes:
-            - ./nuxt:/var/www
+            - ./x-nuxt2:/var/www
         command: >
             sh -c "npm install && npm run dev -- -o"
 
@@ -36,7 +36,7 @@ services:
             - "8001:80"
         volumes:
             - ./docker/nginx/:/etc/nginx/conf.d/
-            - ./laravel/public:/var/www/public
+            - ./auto-api/public:/var/www/public
         networks:
             - laravel
 
