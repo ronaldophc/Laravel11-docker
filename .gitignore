@@ -1,5 +1,5 @@
 .docker/
-auto-api/
-x-nuxt2/
+laravel/
+nuxt/
 .idea/
 idea/

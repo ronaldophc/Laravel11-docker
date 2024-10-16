@@ -4,43 +4,47 @@ version: "3.8"
 
 services:
     # image project
-    auth-app:
+    laravel-api:
         build:
             context: .
             dockerfile: Dockerfile
+        container_name: laravel-api
         restart: unless-stopped
         working_dir: /var/www/
         volumes:
-            - ./auto-api:/var/www
+            - ./laravel:/var/www
         networks:
             - laravel
 
     # nuxt
-    auth-nuxt:
+    node-nuxt:
         image: node:21
+        container_name: node-nuxt
         restart: unless-stopped
         ports:
             - '3000:3000'
         working_dir: /var/www
         volumes:
-            - ./x-nuxt2:/var/www
+            - ./nuxt:/var/www
 
     # nginx
-    auth-nginx:
+    nginx:
         image: nginx:alpine
         restart: unless-stopped
+        container_name: nginx
         ports:
             # laravel port
             - "8001:80"
         volumes:
             - ./docker/nginx/:/etc/nginx/conf.d/
-            - ./auto-api/public:/var/www/public
+            - ./laravel/public:/var/www/public
         networks:
             - laravel
 
     # db mysql
-    auth-db:
+    db:
         image: mysql:8.0
+        container_name: db
         platform: linux/x86_64
         restart: unless-stopped
         environment:
@@ -56,14 +60,14 @@ services:
             - laravel
 
     # PHPMyAdmin
-    auth-phpmyadmin:
+    phpmyadmin:
         image: phpmyadmin/phpmyadmin
         platform: linux/x86_64
         restart: unless-stopped
         ports:
             - "8081:80"
         environment:
-            PMA_HOST: auth-db
+            PMA_HOST: db
             PMA_PORT: 3306
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
         networks:
