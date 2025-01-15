@@ -24,10 +24,10 @@ services:
     #         - ./nuxt:/var/www
 
     # nginx
-    nginx:
+    laravel-nginx:
         image: nginx:alpine
         restart: unless-stopped
-        container_name: nginx
+        container_name: laravel-nginx
         ports:
             # laravel port
             - "8080:80"
@@ -42,12 +42,12 @@ services:
         image: mysql:8.0
         container_name: database
         platform: linux/x86_64
-        restart: unless-stopped
-        environment:
-            MYSQL_DATABASE: laravel
-            MYSQL_ROOT_PASSWORD: root
+        restart: always
         volumes:
             - ./.docker/mysql/dbdata:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: laravel
+            MYSQL_ROOT_PASSWORD: secret
         ports:
             - "3301:3306"
         networks:
@@ -64,6 +64,7 @@ services:
         environment:
             PMA_HOST: database
             PMA_PORT: 3306
+            MYSQL_ROOT_PASSWORD: secret
         networks:
             - laravel-network
 
